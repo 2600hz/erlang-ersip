@@ -28,11 +28,11 @@
 %%%===================================================================
 
 -record(rtcp_fb, {
-    type                   :: rtcp_fb_tp(),
-    val                    :: rtcp_fb_val(),
-    param                  :: undefined | rtcp_fb_params(),
-    bytestring             :: undefined | binary()
-}).
+                  type                   :: rtcp_fb_tp(),
+                  val                    :: rtcp_fb_val(),
+                  param                  :: undefined | rtcp_fb_params(),
+                  bytestring             :: undefined | binary()
+                 }).
 
 -type rtcp_fb()            :: #rtcp_fb{}.
 -type rtcp_fb_tp()         :: non_neg_integer() | '*'.
@@ -147,9 +147,9 @@ do_parse_rtcp_fb(<<Rest/binary>>) ->
             [Type, _, Val, _] = Result,
 
             R1 = #rtcp_fb{
-                type = Type,
-                val = Val
-            },
+                    type = Type,
+                    val = Val
+                   },
 
             case parse_param(Rest1, R1) of
                 {error, Reason} ->
@@ -233,7 +233,7 @@ parse_param(<<Rest/binary>>, R1) ->
             {<<>>, R1#rtcp_fb{param = T}};
         {ok, T, <<?sp, Rest1/binary>>} ->
             {<<>>, R1#rtcp_fb{param = T, bytestring = Rest1}};
-        {ok, T, Rest1} ->
+        {ok, _T, Rest1} ->
             {error, {unexpected_input, Rest1}};
         Err ->
             Err
@@ -245,9 +245,9 @@ parse_param(<<Rest/binary>>, R1) ->
 -spec assemble_rtcp_fb(rtcp_fb()) -> iolist().
 assemble_rtcp_fb(#rtcp_fb{} = RtcpFb) ->
     #rtcp_fb{
-        type = Type,
-        val = Val
-    } = RtcpFb,
+       type = Type,
+       val = Val
+      } = RtcpFb,
 
     [to_iolist_item(Type),?sp,
      to_iolist_item(Val),
